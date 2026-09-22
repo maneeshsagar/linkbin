@@ -63,7 +63,9 @@ func main() {
 	http.HandleFunc("/api/links", withCORSNoop(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
-			var body struct{ URL string `json:"url"` }
+			var body struct {
+				URL string `json:"url"`
+			}
 			if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.URL == "" {
 				js(w, 400, map[string]string{"error": "url is required"})
 				return
@@ -94,8 +96,10 @@ func main() {
 			}
 			defer rows.Close()
 			type link struct {
-				Code, URL, CreatedAt string
-				Clicks               int
+				Code      string `json:"code"`
+				URL       string `json:"url"`
+				CreatedAt string `json:"created_at"`
+				Clicks    int    `json:"clicks"`
 			}
 			out := []link{}
 			for rows.Next() {
